@@ -1,0 +1,15 @@
+# id|parentId|name
+1|0|Grocery
+2|1|Dairy
+8|2|Milk
+9|2|Cheese
+10|2|Yogurt
+3|1|Produce
+11|3|Fruits
+12|3|Vegetables
+4|1|Bakery
+13|4|Bread
+14|4|Pastries
+5|1|Beverages
+6|1|Pantry
+7|1|Snacks
