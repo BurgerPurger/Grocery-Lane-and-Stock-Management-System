@@ -1,5 +1,6 @@
 #ifndef QUEUE_LL_H
 #define QUEUE_LL_H
+
 #include <iostream>
 
 template <typename T>
@@ -9,6 +10,7 @@ class qNode{
         qNode<T>* next;
 };
 
+// create the newNode
 template <typename T>
 qNode<T> *new_node(T newData){
     qNode<T>* newNode = new qNode<T>;
