@@ -1,6 +1,8 @@
 #ifndef BINARYTREE_H
 #define BINARYTREE_H
-#include <iostream>
+
+// The category tree uses this as a general tree via the Left-Child / Right-Sibling
+// representation (left = first child, right = next sibling).
 
 template<typename T>
 class BinaryTree{
@@ -28,11 +30,7 @@ class BinaryTree{
         T getRootVal();
         void setRootVal(T obj);
 
-        //node checker if leaf
-        bool isLeaf();
-
-        // ADDED: re-link a subtree. Needed to detach a category (delete) or move it
-        // under a different parent; insertLeft/insertRight can only create new nodes.
+        // Needed to detach a delete or move it under a different parent; insertLeft/insertRight can only create new nodes.
         void setLeftChild(BinaryTree<T>* node);
         void setRightChild(BinaryTree<T>* node);
 };
@@ -57,11 +55,6 @@ BinaryTree<T> *BinaryTree<T>::getRightChild(){
 template <typename T>
 void BinaryTree<T>::setRootVal(T obj){
     key = obj;
-}
-
-template <typename T>
-bool BinaryTree<T>::isLeaf(){
-    return leftChild == nullptr && rightChild == nullptr;
 }
 
 template <typename T>
@@ -119,36 +112,6 @@ void BinaryTree<T>::insertRight(T newNode){
     }
 }
 
-// Preorder Traversal: Root -> Left -> Right
-template <typename T>
-void preorder(BinaryTree<T>* root) {
-    if (root != nullptr) {
-        std::cout << root->getRootVal() << " ";
-        preorder(root->getLeftChild());
-        preorder(root->getRightChild());
-    }
-}
-
-// Inorder Traversal: Left -> Root -> Right
-template <typename T>
-void inorder(BinaryTree<T>* root) {
-    if (root != nullptr) {
-        inorder(root->getLeftChild());
-        std::cout << root->getRootVal() << " ";
-        inorder(root->getRightChild());
-    }
-}
-
-// Postorder Traversal: Left -> Right -> Root
-template <typename T>
-void postorder(BinaryTree<T>* root) {
-    if (root != nullptr) {
-        postorder(root->getLeftChild());
-        postorder(root->getRightChild());
-        std::cout << root->getRootVal() << " ";
-    }
-}
-
 template <typename T>
 bool findData(BinaryTree<T>* root, int CHOICE, const T& KEY) {
     if (root == nullptr) {
@@ -196,27 +159,6 @@ bool findData(BinaryTree<T>* root, int CHOICE, const T& KEY) {
             return false;
     }
     return false;
-}
-
-// Display the general tree using the Left-Child Right-Sibling representation
-template <typename T>
-void displayTree(BinaryTree<T>* node, int level = 0) {
-    if (node == nullptr) {
-        return;
-    }
-
-    // Display the current node
-    for (int i = 0; i < level; i++) {
-        std::cout << "    ";
-    }
-
-    std::cout << node->getRootVal() << std::endl;
-
-    // Display the first child at the next level
-    displayTree(node->getLeftChild(), level + 1);
-
-    // Display the next sibling at the same level
-    displayTree(node->getRightChild(), level);
 }
 
 #endif
