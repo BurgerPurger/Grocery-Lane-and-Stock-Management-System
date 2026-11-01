@@ -1,7 +1,6 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 
-// Completed sales, receipts and the transaction history (module 6).
 
 #include <algorithm>
 #include <mutex>
@@ -13,7 +12,6 @@
 #include "Inventory.h"
 #include "SearchSort.h"
 
-// Completed sales
 struct Transaction{
     int id = 0;
     int cartId = 0;
@@ -21,7 +19,6 @@ struct Transaction{
     std::vector<TxnItem> items;
     util::Money total = 0;
 
-    // Ordered by id: the history array is searched with binary search.
     bool operator==(const Transaction& o) const{
         return id == o.id;
     }
@@ -34,14 +31,10 @@ struct Transaction{
 util::Money computeTotal(const std::vector<TxnItem>& items);
 std::string formatReceipt(const Transaction& t);
 
-// Transaction history
-// ARRAY (std::vector) ordered by transaction id, lookups use binary search.
-// Ids only ever grow, so appending keeps the order.
 class TransactionManager{
 public:
     TransactionManager();
 
-    // Called by checkout threads when a cart is paid.
     Transaction recordSale(int cartId, int lane, const std::vector<TxnItem>& items);
 
     bool findById(int id, Transaction& out) const; // binary search
