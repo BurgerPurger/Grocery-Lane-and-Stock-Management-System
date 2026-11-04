@@ -1,13 +1,5 @@
 # Grocery Inventory and Checkout Management System (C++17)
 
-Build: `build.bat` (Windows) or `make` → `./grocery` (options: `--data FOLDER --lanes 1-8 --delay MS --customers N --seed N`).
-Tests: `make test`, `make tsan`, `make asan`. Sample data is in `data/`.
-
-## Customers (automatic)
-Customers are not created by hand any more. At the start of every session a random group (4-10, or
-`--customers N`) arrives. Each one fills a random basket from what is on the shelves and joins a random
-lane; then you open the lanes from menu 4. More customers can be brought in any time with menu 4 -> 2 (Simulate customers). `--seed N` makes a session repeatable.
-
 ## Stock: storehouse and shelves
 - Every product has two counts: **Shelf** (what customers can buy) and **Store** (the storehouse).
 - A delivery (menu 3 -> 1) is booked into the **storehouse**, never straight onto the shelf.
