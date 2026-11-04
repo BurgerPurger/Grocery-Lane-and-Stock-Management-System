@@ -8,7 +8,6 @@
   together under one lock, so two customers can never get the same last unit).
 - Checkout lanes never reject a cart: they just record the sale and print the receipt.
 - Carts still waiting when the program exits are not saved; their items are added back to the saved shelf stock.
-- `data/products.txt`: `id|categoryId|priceCentavos|shelfQty|storehouseQty|name` (old 5-field files still load).
 
 ## Outline -> files (everything is header-only; only `main.cpp` is compiled)
 | Module | File | Your headers used |
@@ -23,8 +22,3 @@
 | Reports | Reports.h | tree traversal |
 | Persistence | FileManager.h | – |
 | Menu | main.cpp | – |
-
-
-## Complexity
-Linear search O(n) · binary search O(log n) · queue enqueue/dequeue O(1) · append to inventory O(1) ·
-traverse products O(n) · traverse categories O(c) · remove product O(n).
