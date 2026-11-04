@@ -32,11 +32,6 @@ lane; then you open the lanes from menu 4. More customers can be brought in any 
 | Persistence | FileManager.h | – |
 | Menu | main.cpp | – |
 
-Build by hand: `g++ -std=c++17 -pthread -Isrc src/main.cpp -o grocery`
-
-## Changes made to your headers (now in `src/`)
-queue_ll.h: enqueue on an empty queue linked the node to itself; dequeue/showFront crashed when empty.
-simply_ll.h: added `<iostream>`. BinaryTree.h: added setLeftChild/setRightChild (to move/delete categories).
 
 ## Complexity
 Linear search O(n) · binary search O(log n) · queue enqueue/dequeue O(1) · append to inventory O(1) ·
