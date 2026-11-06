@@ -1,8 +1,6 @@
 #ifndef INVENTORY_H
 #define INVENTORY_H
 
-// Products and inventory (module 1).
-
 #include <map>
 #include <mutex>
 #include <string>
@@ -89,9 +87,7 @@ using util::Result;
 using util::success;
 
 namespace{
-
-const int kMaxStock = 1000000;
-const util::Money kMaxPrice = 100000000LL;
+const int kMaxStock = 10000;
 
 // Validates product fields.
 Result validateFields(const std::string& name, util::Money price, int qty, int storage = 0){
@@ -99,24 +95,16 @@ Result validateFields(const std::string& name, util::Money price, int qty, int s
         return failure("Name must be 1-60 characters.");
     }
 
-    if(name.find_first_of("|\r\n") != std::string::npos){
-        return failure("Name cannot contain '|' or line breaks.");
-    }
-
     if(price <= 0){
-        return failure("Price must be greater than zero.");
-    }
-
-    if(price > kMaxPrice){
-        return failure("Price is unreasonably large.");
+        return failure("Price cannot be negative.");
     }
 
     if(qty < 0){
         return failure("Quantity cannot be negative.");
     }
 
-    if(qty > kMaxStock){
-        return failure("Quantity is unreasonably large.");
+    if(qty > kMaxStock/10){
+        return failure("Quantity is too large.");
     }
 
     if(storage < 0 || storage > kMaxStock){
@@ -204,7 +192,7 @@ Result Inventory::remove(int id){
     if(node->data.quantity > 0 || node->data.storage > 0){
         return failure("Product still has " + std::to_string(node->data.quantity) +
                        " unit(s) on the shelf and " + std::to_string(node->data.storage) +
-                       " in the storehouse. Set both counts to 0 first (write-off) if it "
+                       " in the storehouse. Set both counts to 0 first if it "
                        "really must be removed.");
     }
 
@@ -283,7 +271,7 @@ size_t Inventory::size() const{
 // Stock.
 Result Inventory::receiveStock(int id, int amount){
     if(amount <= 0){
-        return failure("Delivery amount must be positive.");
+        return failure("Delivered amount must be positive.");
     }
 
     std::lock_guard<std::mutex> lock(mtx_);
@@ -318,7 +306,7 @@ Result Inventory::moveToShelf(int id, int amount){
                        " unit(s) of " + node->data.name + ".");
     }
 
-    if(static_cast<long long>(node->data.quantity) + amount > kMaxStock){
+    if(static_cast<long long>(node->data.quantity) + amount > kMaxStock/10){
         return failure("That would exceed the maximum shelf level.");
     }
 
@@ -330,7 +318,7 @@ Result Inventory::moveToShelf(int id, int amount){
 }
 
 Result Inventory::setStock(int id, int quantity){
-    if(quantity < 0 || quantity > kMaxStock){
+    if(quantity < 0 || quantity > kMaxStock/10){
         return failure("Quantity out of range.");
     }
 
@@ -341,22 +329,8 @@ Result Inventory::setStock(int id, int quantity){
         return failure("No product with ID " + std::to_string(id) + ".");
     }
 
-    // The difference goes to or comes from the storehouse
-    long long change = static_cast<long long>(quantity) - node->data.quantity;
-    long long newStorage = static_cast<long long>(node->data.storage) - change;
-
-    if(newStorage < 0){
-        return failure("The storehouse only has " + std::to_string(node->data.storage) + " to move to the shelf.");
-    }
-    if(newStorage > kMaxStock){
-        return failure("The storehouse cannot hold that many.");
-    }
-
     node->data.quantity = quantity;
-    node->data.storage = static_cast<int>(newStorage);
-
-    return success("Shelf now holds " + std::to_string(node->data.quantity) +
-                   ", storehouse " + std::to_string(node->data.storage) + ".", id);
+    return success("Shelf stock set to " + std::to_string(quantity) + ".", id);
 }
 
 PurchaseResult Inventory::commitPurchase(const std::vector<LineItem>& items){
