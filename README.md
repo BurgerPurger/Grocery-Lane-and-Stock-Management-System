@@ -26,3 +26,4 @@
 
 Members:
 qedizor-lgtm - Dizor, Elijah I.
+Payascpe - Payas, John Paul S.
