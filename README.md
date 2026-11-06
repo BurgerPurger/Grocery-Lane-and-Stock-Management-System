@@ -22,3 +22,7 @@
 | Reports | Reports.h | tree traversal |
 | Persistence | FileManager.h | – |
 | Menu | main.cpp | – |
+
+
+Members:
+qedizor-lgtm - Dizor, Elijah I.
