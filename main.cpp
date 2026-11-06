@@ -177,7 +177,7 @@ private:
         long long id;
 
         while (true){
-            if (!readInt(prompt, 1, 10000, id)){
+            if (!readInt(prompt, 1, 1000000, id)){
                 return false;
             }
             if (categories_.exists(static_cast<int>(id))){
@@ -207,7 +207,7 @@ private:
             heading("MANAGE PRODUCTS");
             std::cout << "1. Add a product\n2. Display all products\n3. Search for a product (by ID or name)\n"
                          "4. Update product details\n5. Remove a product\n"
-                         "6. Adjust shelf stock (set exact count)\n"
+                         "6. Adjust shelf stock\n"
                          "7. Check available quantity\n0. Back\n\n";
 
             long long c;
@@ -270,10 +270,10 @@ private:
         if (!util::readMoney("Price (PHP): ", price)){
             return;
         }
-        if (!readInt("Starting quantity on the shelf: ", 0, 1000, qty)){
+        if (!readInt("Starting quantity on the shelf: ", 0, 1000000, qty)){
             return;
         }
-        if (!readInt("Starting quantity in the storehouse: ", 0, 10000, store)){
+        if (!readInt("Starting quantity in the storehouse: ", 0, 1000000, store)){
             return;
         }
 
@@ -372,9 +372,9 @@ private:
             return;
         }
 
-        std::cout << "  Current shelf count for " << p.name << ": " << p.quantity << "\n";
+        std::cout << "  " << p.name << ": " << p.quantity << " on the shelf, " << p.storage << " in the storehouse.\n";
 
-        if (!readInt("Counted quantity on the shelf: ", 0, 1000, qty)){
+        if (!readInt("Counted quantity on the shelf: ", 0, 1000000, qty)){
             return;
         }
 
@@ -562,7 +562,7 @@ private:
                 std::cout << "  No product with ID " << id << ".\n";
                 continue;
             }
-            if (!readInt("Units delivered of " + p.name + ": ", 1, 10000, amount)){
+            if (!readInt("Units delivered of " + p.name + ": ", 1, 1000000, amount)){
                 continue;
             }
             lines[p.id] += static_cast<int>(amount);
@@ -791,6 +791,25 @@ private:
 
 int main(int argc, char** argv){
     Config cfg;
+
+    for (int i = 1; i < argc; ++i){
+        std::string a = argv[i];
+
+        if (a == "--data" && i + 1 < argc){
+            cfg.dataDir = argv[++i];
+        }else if (a == "--lanes" && i + 1 < argc){
+            cfg.lanes = std::max(1, std::min(8, std::atoi(argv[++i])));
+        }else if (a == "--delay" && i + 1 < argc){
+            cfg.delayMs = std::max(0, std::atoi(argv[++i]));
+        }else if (a == "--customers" && i + 1 < argc){
+            cfg.customers = std::max(0, std::atoi(argv[++i]));
+        }else if (a == "--seed" && i + 1 < argc){
+            cfg.seed = std::max(0, std::atoi(argv[++i]));
+        }else{
+            std::cout << "Usage: grocery [--data FOLDER] [--lanes 1-8] [--delay MILLISECONDS] [--customers N] [--seed N]\n";
+            return a == "--help" ? 0 : 1;
+        }
+    }
 
     App app(cfg);
     return app.run();
