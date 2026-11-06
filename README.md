@@ -29,4 +29,4 @@ Members:
 - Payascpe - Payas, John Paul S.
 - BurgerPurger - Magtaan, Dylan Paolo M.
 - JaredDC21 - Dela Cruz, Jared Isaiah P.
-- 
+- RPDevs - Panti, Dominic Rodnee A.
